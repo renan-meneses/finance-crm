@@ -12,22 +12,27 @@
       </div>
       <button type="submit">Entrar</button>
     </form>
+    
+    <SocialLogin />
+    
     <p v-if="error" class="error">{{ error }}</p>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useMutation } from '@vue/apollo-composable'
 import { LOGIN } from '@/graphql/auth'
 import { useAuthStore } from '@/stores/auth'
 import type { LoginInput } from '@/types/user'
+import SocialLogin from '@/components/SocialLogin.vue'
 
 const email = ref('')
 const password = ref('')
 const error = ref('')
 const router = useRouter()
+const route = useRoute()
 const authStore = useAuthStore()
 
 const { mutate: loginMutation } = useMutation(LOGIN)
@@ -47,6 +52,21 @@ const handleLogin = async () => {
     error.value = err.message || 'Erro ao fazer login'
   }
 }
+
+onMounted(() => {
+  if (route.query.token && route.query.user) {
+    try {
+      const userData = JSON.parse(atob(route.query.user as string))
+      authStore.setAuth({
+        token: route.query.token as string,
+        user: userData
+      })
+      router.push('/dashboard')
+    } catch (e) {
+      error.value = 'Erro ao processar login social'
+    }
+  }
+})
 </script>
 
 <style scoped>
