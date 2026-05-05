@@ -1,0 +1,111 @@
+type Query {
+    me: User @auth(guard: "sanctum")
+    users: [User!]! @all @can(ability: "viewAny", model: "App\\Models\\User")
+    user(id: ID! @eq): User @find @can(ability: "view", model: "App\\Models\\User")
+    contas: [Conta!]! @all @where(key: "user_id", operator: "=")
+    conta(id: ID! @eq): Conta @find
+    contasBancarias: [ContaBancaria!]! @all @where(key: "user_id", operator: "=")
+    contaBancaria(id: ID! @eq): ContaBancaria @find
+}
+
+type Mutation {
+    login(email: String!, password: String!): AuthPayload!
+    logout: Boolean! @field(resolver: "App\\GraphQL\\Mutations\\Logout@logout")
+    
+    createUser(input: CreateUserInput!): User! @create @can(ability: "create", model: "App\\Models\\User")
+    updateUser(id: ID!, input: UpdateUserInput!): User! @update @can(ability: "update", model: "App\\Models\\User")
+    deleteUser(id: ID!): User @delete @can(ability: "delete", model: "App\\Models\\User")
+    
+    createConta(input: CreateContaInput!): Conta! @create @can(ability: "create", model: "App\\Models\\Conta")
+    updateConta(id: ID!, input: UpdateContaInput!): Conta! @update @can(ability: "update", model: "App\\Models\\Conta")
+    deleteConta(id: ID!): Conta @delete @can(ability: "delete", model: "App\\Models\\Conta")
+    
+    createContaBancaria(input: CreateContaBancariaInput!): ContaBancaria! @create
+    updateContaBancaria(id: ID!, input: UpdateContaBancariaInput!): ContaBancaria! @update
+    deleteContaBancaria(id: ID!): ContaBancaria @delete
+}
+
+type AuthPayload {
+    token: String!
+    user: User!
+}
+
+type User {
+    id: ID!
+    name: String!
+    email: String!
+    role: String!
+    contas: [Conta!]! @hasMany
+    contasBancarias: [ContaBancaria!]! @hasMany
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type Conta {
+    id: ID!
+    user: User! @belongsTo
+    nome: String!
+    saldo: Float!
+    tipo: String!
+    descricao: String
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type ContaBancaria {
+    id: ID!
+    user: User! @belongsTo
+    banco: String!
+    agencia: String!
+    conta: String!
+    tipo: String!
+    saldo: Float!
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+input CreateUserInput {
+    name: String!
+    email: String!
+    password: String!
+    role: String!
+}
+
+input UpdateUserInput {
+    name: String
+    email: String
+    password: String
+    role: String
+}
+
+input CreateContaInput {
+    user_id: ID!
+    nome: String!
+    saldo: Float
+    tipo: String!
+    descricao: String
+}
+
+input UpdateContaInput {
+    nome: String
+    saldo: Float
+    tipo: String
+    descricao: String
+}
+
+input CreateContaBancariaInput {
+    user_id: ID!
+    banco: String!
+    agencia: String!
+    conta: String!
+    tipo: String!
+    saldo: Float
+}
+
+input UpdateContaBancariaInput {
+    banco: String
+    agencia: String
+    conta: String
+    tipo: String
+    saldo: Float
+}
