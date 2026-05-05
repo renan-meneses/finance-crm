@@ -1,0 +1,32 @@
+export const categoriasDespesas = (): Record<string, string> => ({
+  habitacao: 'Habitação',
+  alimentacao: 'Alimentação',
+  transporte: 'Transporte',
+  saude: 'Saúde',
+  educacao: 'Educação',
+  lazer: 'Lazer',
+  contas_consumo: 'Contas de Consumo',
+  assinaturas_servicos: 'Assinaturas e Serviços',
+  compras_vestuario: 'Compras e Vestuário',
+  cuidados_pessoais: 'Cuidados Pessoais',
+  pets: 'Pets',
+  impostos_taxas: 'Impostos e Taxas',
+  manutencao_residencial: 'Manutenção Residencial',
+  investimentos: 'Investimentos',
+  reserva_emergencia: 'Reserva de Emergência',
+  diversos_outros: 'Diversos / Outros',
+})
+
+export const categoriasReceitas = (): Record<string, string> => ({
+  salario: 'Salário',
+  pro_labore: 'Pró-labore',
+  renda_extra_freelance: 'Renda Extra / Freelance',
+  investimentos_rendimentos: 'Investimentos (Dividendos/Juros)',
+  venda_ativos: 'Venda de Ativos (Bens/Usados)',
+  reembolsos: 'Reembolsos',
+  presentes_doacoes: 'Presentes / Doações',
+  bonificacoes_comissoes: 'Bonificações / Comissões',
+  restituicao_imposto: 'Restituição de Imposto',
+  alugueis_recebidos: 'Aluguéis Recebidos',
+  outras_receitas: 'Outras Receitas',
+})

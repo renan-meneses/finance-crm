@@ -6,6 +6,45 @@ type Query {
     conta(id: ID! @eq): Conta @find
     contasBancarias: [ContaBancaria!]! @all @where(key: "user_id", operator: "=")
     contaBancaria(id: ID! @eq): ContaBancaria @find
+    transactions: [Transaction!]! @all @where(key: "user_id", operator: "=")
+    transaction(id: ID! @eq): Transaction @find
+    resumoFinanceiro: ResumoFinanceiro! @field(resolver: "App\\GraphQL\\Queries\\ResumoFinanceiro@resolve")
+}
+
+type ResumoFinanceiro {
+    total_receitas: Float!
+    total_despesas: Float!
+    saldo: Float!
+    despesas_por_categoria: [CategoriaValor!]!
+    receitas_por_categoria: [CategoriaValor!]!
+}
+
+type CategoriaValor {
+    categoria: String!
+    label: String!
+    valor: Float!
+    cor: String!
+}
+
+type Mutation {
+    login(email: String!, password: String!): AuthPayload!
+    logout: Boolean! @field(resolver: "App\\GraphQL\\Mutations\\Logout@logout")
+    
+    createUser(input: CreateUserInput!): User! @create @can(ability: "create", model: "App\\Models\\User")
+    updateUser(id: ID!, input: UpdateUserInput!): User! @update @can(ability: "update", model: "App\\Models\\User")
+    deleteUser(id: ID!): User @delete @can(ability: "delete", model: "App\\Models\\User")
+    
+    createConta(input: CreateContaInput!): Conta! @create
+    updateConta(id: ID!, input: UpdateContaInput!): Conta! @update
+    deleteConta(id: ID!): Conta @delete
+    
+    createContaBancaria(input: CreateContaBancariaInput!): ContaBancaria! @create
+    updateContaBancaria(id: ID!, input: UpdateContaBancariaInput!): ContaBancaria! @update
+    deleteContaBancaria(id: ID!): ContaBancaria @delete
+
+    createTransaction(input: CreateTransactionInput!): Transaction! @field(resolver: "App\\GraphQL\\Mutations\\CreateTransaction@resolve")
+    updateTransaction(id: ID!, input: UpdateTransactionInput!): Transaction! @field(resolver: "App\\GraphQL\\Mutations\\UpdateTransaction@resolve")
+    deleteTransaction(id: ID!): Transaction @delete
 }
 
 type Mutation {
@@ -42,15 +81,37 @@ type User {
     updated_at: DateTime!
 }
 
-type Conta {
+type Transaction {
     id: ID!
     user: User! @belongsTo
-    nome: String!
-    saldo: Float!
+    conta: Conta! @belongsTo
     tipo: String!
+    categoria: String!
+    categoria_label: String! @field(resolver: "App\\GraphQL\\Fields\\TransactionFields@categoriaLabel")
+    valor: Float!
     descricao: String
+    data: Date!
+    comprovante_url: String @field(resolver: "App\\GraphQL\\Fields\\TransactionFields@comprovanteUrl")
     created_at: DateTime!
     updated_at: DateTime!
+}
+
+input CreateTransactionInput {
+    conta_id: ID!
+    tipo: String!
+    categoria: String!
+    valor: Float!
+    descricao: String
+    data: Date!
+}
+
+input UpdateTransactionInput {
+    conta_id: ID
+    tipo: String
+    categoria: String
+    valor: Float
+    descricao: String
+    data: Date
 }
 
 type ContaBancaria {

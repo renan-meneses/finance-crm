@@ -5,6 +5,7 @@
         <router-link to="/dashboard">Dashboard</router-link>
         <router-link to="/contas">Contas</router-link>
         <router-link to="/contas-bancarias">Contas Bancárias</router-link>
+        <router-link to="/transacoes">Transações</router-link>
         <router-link to="/usuarios" v-if="authStore.user?.role !== 'usuario'">Usuários</router-link>
         <button @click="toggleTheme" class="theme-btn">
           {{ isDark ? '☀️ Light' : '🌙 Dark' }}
