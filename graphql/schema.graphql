@@ -35,6 +35,7 @@ type User {
     name: String!
     email: String!
     role: String!
+    theme: String!
     contas: [Conta!]! @hasMany
     contasBancarias: [ContaBancaria!]! @hasMany
     created_at: DateTime!
@@ -69,6 +70,7 @@ input CreateUserInput {
     email: String!
     password: String!
     role: String!
+    theme: String
 }
 
 input UpdateUserInput {
@@ -76,6 +78,7 @@ input UpdateUserInput {
     email: String
     password: String
     role: String
+    theme: String
 }
 
 input CreateContaInput {

@@ -12,26 +12,31 @@ const router = createRouter({
     {
       path: '/dashboard',
       name: 'dashboard',
-      component: () => import('@/views/Dashboard.vue'),
-      meta: { requiresAuth: true }
-    },
-    {
-      path: '/contas',
-      name: 'contas',
-      component: () => import('@/views/ContasView.vue'),
-      meta: { requiresAuth: true }
-    },
-    {
-      path: '/contas-bancarias',
-      name: 'contas-bancarias',
-      component: () => import('@/views/ContasBancariasView.vue'),
-      meta: { requiresAuth: true }
-    },
-    {
-      path: '/usuarios',
-      name: 'usuarios',
-      component: () => import('@/views/UsuariosView.vue'),
-      meta: { requiresAuth: true, requiresRole: ['gestor', 'admin'] }
+      component: () => import('@/components/AppLayout.vue'),
+      meta: { requiresAuth: true },
+      children: [
+        {
+          path: '',
+          name: 'dashboard-home',
+          component: () => import('@/views/Dashboard.vue'),
+        },
+        {
+          path: '/contas',
+          name: 'contas',
+          component: () => import('@/views/ContasView.vue'),
+        },
+        {
+          path: '/contas-bancarias',
+          name: 'contas-bancarias',
+          component: () => import('@/views/ContasBancariasView.vue'),
+        },
+        {
+          path: '/usuarios',
+          name: 'usuarios',
+          component: () => import('@/views/UsuariosView.vue'),
+          meta: { requiresRole: ['gestor', 'admin'] }
+        }
+      ]
     },
     {
       path: '/',

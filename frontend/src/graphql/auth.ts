@@ -27,6 +27,7 @@ export const ME = gql`
       name
       email
       role
+      theme
     }
   }
 `
